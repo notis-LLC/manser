@@ -1,0 +1,159 @@
+{
+  "msg": "",
+  "content": {
+    "id": 1989,
+    "img": {
+      "high": "/media/titles/cheshire-crossing/high_cover.jpg",
+      "mid": "/media/titles/cheshire-crossing/mid_cover.jpg",
+      "low": "/media/titles/cheshire-crossing/low_cover.jpg"
+    },
+    "en_name": "Cheshire Crossing",
+    "rus_name": "Распутье Чешира",
+    "another_name": "Когда дорогу перешёл Чешир",
+    "dir": "cheshire-crossing",
+    "description": "<p>Что происходит после &quot;жили долго и счастливо?&quot;Это история про Алису Лидделл, Дороти Гейл и Венди Дарлинг.Три абсолютно разные героини с уникальными талантами и нереализованным потенциалом.Когда их мир оказывается под угрозой, смогут ли они сделать то, что нужно, чтобы забыть о своих различиях и работать сообща, дабы прийти к знакомой нам книжной концовке? Или такое бывает только в сказках?&nbsp;&copy; Sarah Andersen и Andy Weir, перевод Smooz, Wimer Team.</p>",
+    "issue_year": 2017,
+    "avg_rating": "10.0",
+    "count_rating": 1,
+    "age_limit": 0,
+    "status": {
+      "id": 1,
+      "name": "Продолжается"
+    },
+    "bookmarks": {
+      "per_type": [
+        {
+          "count_users": 2,
+          "name": "Брошено"
+        },
+        {
+          "count_users": 7,
+          "name": "Читаю"
+        },
+        {
+          "count_users": 4,
+          "name": "Буду читать"
+        }
+      ],
+      "total": 13
+    },
+    "total_votes": 22,
+    "total_views": 390,
+    "type": {
+      "id": 0,
+      "name": "Манга"
+    },
+    "genres": [
+      {
+        "id": 11,
+        "name": "Драма"
+      },
+      {
+        "id": 23,
+        "name": "Приключения"
+      },
+      {
+        "id": 38,
+        "name": "Фэнтези"
+      }
+    ],
+    "categories": [
+      {
+        "id": 5,
+        "name": "Веб"
+      },
+      {
+        "id": 6,
+        "name": "В цвете"
+      }
+    ],
+    "publishers": [
+      {
+        "id": 157,
+        "name": "Wimer",
+        "img": "/static/images/publishers/no-image.jpg",
+        "dir": "wimer",
+        "tagline": "",
+        "type": 1
+      }
+    ],
+    "bookmark_type": null,
+    "branches": [
+      {
+        "id": 1861,
+        "img": "/static/images/publishers/no-image.jpg",
+        "publishers": [
+          {
+            "id": 157,
+            "name": "Wimer",
+            "img": "/static/images/publishers/no-image.jpg",
+            "dir": "wimer",
+            "tagline": "",
+            "type": 1
+          }
+        ],
+        "total_votes": 22,
+        "count_chapters": 18
+      }
+    ],
+    "count_chapters": 18,
+    "first_chapter": {
+      "id": 117924,
+      "tome": 1,
+      "chapter": "0",
+      "name": "Предисловие"
+    },
+    "last_chapter": {
+      "id": 345901,
+      "tome": 1,
+      "chapter": "17",
+      "name": "Птичка потеряла свои крылья"
+    },
+    "newlate_id": null,
+    "newlate_title": null,
+    "is_adsense_blocked": 0,
+    "related": null
+  },
+  "props": {
+    "bookmark_types": [
+      {
+        "id": 0,
+        "name": "Читаю"
+      },
+      {
+        "id": 1,
+        "name": "Буду читать"
+      },
+      {
+        "id": 2,
+        "name": "Прочитано"
+      },
+      {
+        "id": 4,
+        "name": "Отложено"
+      },
+      {
+        "id": 3,
+        "name": "Брошено"
+      }
+    ],
+    "can_update": false,
+    "can_upload_chapters": false,
+    "age_limit": [
+      {
+        "id": 0,
+        "name": "Для всех"
+      },
+      {
+        "id": 1,
+        "name": "16+"
+      },
+      {
+        "id": 2,
+        "name": "18+"
+      }
+    ],
+    "admin_link": null,
+    "panel_link": null
+  }
+}
