@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum, unique
-from typing import Generator, List, Optional
+from typing import Generator, List
 
 import orjson
 from lsm import LSM
@@ -75,8 +75,18 @@ class UserStore:
 
 class MangaStore:
     db: LSM
+    update_interval: timedelta
 
-    def save(self, parser: str, slug, model: List[BaseLatestValidator]) -> None:
+    def need_update(self, parser: str, slug: str) -> bool:
+        try:
+            key = self.db[f"update-{parser}-{slug}"].decode()
+        except KeyError:
+            return True
+
+        dt = datetime.fromisoformat(key)
+        return (datetime.utcnow() - dt) > self.update_interval
+
+    def save(self, parser: str, slug: str, model: List[BaseLatestValidator]) -> None:
         for i, manga in enumerate(model):
             self.db[f"manga-{parser}-{slug}-{str(i).zfill(4)}"] = manga.json()
         self.db[f"update-{parser}-{slug}"] = datetime.utcnow()
@@ -90,40 +100,7 @@ class MangaStore:
             yield BaseLatestValidator(**orjson.loads(val))
 
 
-class ReadmangaStore:
-    db: LSM
-
-    @property
-    def cont(self):
-        if self.db["readmanga-finish"]:
-            raise StoreFinish
-        try:
-            return self.db["cont"].decode()
-        except KeyError:
-            return None
-
-    def update_cont(self, value: Optional[str]):
-        print("update", value)
-        if not value:
-            self.db["readmanga-finish"] = True
-            return
-        self.db["cont"] = value
-        self.db["readmnga-cont"] = value
-        self.db.commit()
-
-    def save_readmanga(self, model: HistoryModel):
-        self.db[f"history-readmanga-{model.url}"] = model.json()
-
-    def get_readmanga(self, name: str) -> List[HistoryModel]:
-        k = f"{name}/"
-        result = []
-        for key, val in self.db[f"history-readmanga-https://readmanga.me/{k}/":]:
-            if k not in key.decode():
-                break
-            result.append(HistoryModel(**orjson.loads(val)))
-        return result
-
-
-class Store(UserStore, ReadmangaStore, MangaStore):
-    def __init__(self, db: LSM):
+class Store(UserStore, MangaStore):
+    def __init__(self, db: LSM, update_interval: timedelta):
         self.db = db
+        self.update_interval = update_interval

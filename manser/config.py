@@ -1,5 +1,5 @@
 import logging
-from os import environ
+from datetime import timedelta
 
 from starlette.config import Config
 from starlette.datastructures import Secret
@@ -17,3 +17,7 @@ LOG_LEVEL = logging.DEBUG if DEBUG else logging.INFO
 
 PROXY6_TOKEN = config("PROXY6_TOKEN", cast=Secret)
 DBNAME = config("DBNAME", cast=str, default="db.lsm")
+
+
+UPDATE_INTERVAL_HOURS = config("UPDATE_INTERVAL_HOURS", default=4, cast=int)
+UPDATE_INTERVAL = timedelta(hours=UPDATE_INTERVAL_HOURS)

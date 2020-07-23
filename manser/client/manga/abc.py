@@ -33,9 +33,13 @@ class BaseMangaSource:
     def strip_text(self, text: str):
         return text.replace("\r", "").replace("\n", "")
 
-    async def save(self, slug: str):
+    async def save(self, slug: str) -> None:
+        if not self.store.need_update(self.key, slug):
+            return None
+
         latest: List[BaseLatestValidator] = await list(self.latest(slug))
         self.store.save(self.key, slug, latest)
+        return None
 
     @abc.abstractmethod
     async def latest(self, slug: str) -> AsyncGenerator[BaseLatestValidator, None]:

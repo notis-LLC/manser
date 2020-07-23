@@ -18,12 +18,12 @@ from manser.client.proxy6 import Proxy6
 from manser.client.store import Store
 
 environ["PROXY6_TOKEN"] = "test-key"
-from manser.config import DBNAME, PROXY6_TOKEN
+from manser.config import DBNAME, PROXY6_TOKEN, UPDATE_INTERVAL
 
 
 @pytest.fixture
 def store():
-    store = Store(LSM(DBNAME))
+    store = Store(LSM(DBNAME), UPDATE_INTERVAL)
     yield store
     store.db.close()
     os.remove(DBNAME)

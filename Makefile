@@ -3,7 +3,7 @@ HASH := $(shell git rev-parse --short HEAD)
 
 
 black:
-	poetry run isort -rc manser tests
+	poetry run isort manser tests
 	poetry run black manser tests
 
 build:
