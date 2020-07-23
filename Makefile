@@ -11,3 +11,7 @@ build:
 
 upload: build
 	docker push pavkazzz/manser:$(VERSION)-$(HASH)
+
+develop:
+	pip install poetry==1.0.*
+	poetry install
