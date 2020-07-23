@@ -1,0 +1,198 @@
+{
+  "msg": "",
+  "content": {
+    "id": 273,
+    "img": {
+      "high": "/media/titles/blade_of_demon_destruction/high_cover.jpg",
+      "mid": "/media/titles/blade_of_demon_destruction/mid_cover.jpg",
+      "low": "/media/titles/blade_of_demon_destruction/low_cover.jpg"
+    },
+    "en_name": "Blade of Demon Destruction",
+    "rus_name": "Клинок, рассекающий демонов",
+    "another_name": "Kimetsu no Yaiba",
+    "dir": "blade_of_demon_destruction",
+    "description": "<p>Танджиро - старший сын в семье, потерявшей кормильца. Однажды он уходит в другой город, чтобы продать древесный уголь, но в конце концов остаётся на ночь в чужом доме, вместо того, чтобы идти домой. А всё из-за слухов о демоне, который разгуливает в горах под покровом темноты. Утром парень вернётся домой живым и невредимым... Но его ждут ужасные известия.</p>",
+    "issue_year": 2016,
+    "avg_rating": "9.3",
+    "count_rating": 469,
+    "age_limit": 0,
+    "status": {
+      "id": 0,
+      "name": "Закончен"
+    },
+    "bookmarks": {
+      "per_type": [
+        {
+          "count_users": 2280,
+          "name": "Читаю"
+        },
+        {
+          "count_users": 572,
+          "name": "Буду читать"
+        },
+        {
+          "count_users": 48,
+          "name": "Брошено"
+        }
+      ],
+      "total": 2900
+    },
+    "total_votes": 37774,
+    "total_views": 679451,
+    "type": {
+      "id": 0,
+      "name": "Манга"
+    },
+    "genres": [
+      {
+        "id": 2,
+        "name": "Боевик"
+      },
+      {
+        "id": 11,
+        "name": "Драма"
+      },
+      {
+        "id": 13,
+        "name": "История"
+      },
+      {
+        "id": 16,
+        "name": "Комедия"
+      },
+      {
+        "id": 22,
+        "name": "Постапокалиптика"
+      },
+      {
+        "id": 23,
+        "name": "Приключения"
+      },
+      {
+        "id": 24,
+        "name": "Психология"
+      },
+      {
+        "id": 27,
+        "name": "Сверхъестественное"
+      },
+      {
+        "id": 34,
+        "name": "Трагедия"
+      },
+      {
+        "id": 36,
+        "name": "Ужасы"
+      },
+      {
+        "id": 38,
+        "name": "Фэнтези"
+      }
+    ],
+    "categories": [
+      {
+        "id": 15,
+        "name": "Демоны"
+      },
+      {
+        "id": 64,
+        "name": "ГГ мужчина"
+      },
+      {
+        "id": 122,
+        "name": "Бои на мечах"
+      }
+    ],
+    "publishers": [
+      {
+        "id": 184,
+        "name": "Otakudo",
+        "img": "/static/images/publishers/no-image.jpg",
+        "dir": "otakudo",
+        "tagline": "",
+        "type": 1
+      }
+    ],
+    "bookmark_type": 0,
+    "rated": null,
+    "branches": [
+      {
+        "id": 208,
+        "img": "/static/images/publisheractive_branchs/no-image.jpg",
+        "publishers": [
+          {
+            "id": 184,
+            "name": "Otakudo",
+            "img": "/static/images/publishers/no-image.jpg",
+            "dir": "otakudo",
+            "tagline": "",
+            "type": 1
+          }
+        ],
+        "subscribed": null,
+        "total_votes": 37774,
+        "count_chapters": 223
+      }
+    ],
+    "active_branch": 208,
+    "count_chapters": 223,
+    "first_chapter": {
+      "id": 15327,
+      "tome": 1,
+      "chapter": "1",
+      "name": ""
+    },
+    "last_chapter": {
+      "id": 348061,
+      "tome": 24,
+      "chapter": "205",
+      "name": "КОНЕЦ"
+    },
+    "newlate_id": null,
+    "newlate_title": null,
+    "is_adsense_blocked": 1,
+    "related": null
+  },
+  "props": {
+    "bookmark_types": [
+      {
+        "id": 0,
+        "name": "Читаю"
+      },
+      {
+        "id": 1,
+        "name": "Буду читать"
+      },
+      {
+        "id": 2,
+        "name": "Прочитано"
+      },
+      {
+        "id": 4,
+        "name": "Отложено"
+      },
+      {
+        "id": 3,
+        "name": "Брошено"
+      }
+    ],
+    "can_update": true,
+    "can_upload_chapters": false,
+    "age_limit": [
+      {
+        "id": 0,
+        "name": "Для всех"
+      },
+      {
+        "id": 1,
+        "name": "16+"
+      },
+      {
+        "id": 2,
+        "name": "18+"
+      }
+    ],
+    "admin_link": null,
+    "panel_link": null
+  }
+}
