@@ -1,9 +1,10 @@
 import logging
 import time
-from types import MappingProxyType
+from datetime import datetime
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Request, Response
+from fastapi import APIRouter, BackgroundTasks, Request, Response
+from fastapi.responses import ORJSONResponse
 from more_itertools import take
 from pydantic import BaseModel
 from yarl import URL
@@ -13,24 +14,6 @@ from manser.client.manga.abc import BaseLatestValidator, BaseMangaSource
 log = logging.getLogger(__name__)
 
 router = APIRouter()
-
-
-def mapping(request: Request):
-    log.info("Create deps mapping")
-    state = request.app.state
-    return MappingProxyType(
-        {
-            "readmanga.me": state.readmanga,
-            "readmanga.live": state.readmanga,
-            "readmanga": state.readmanga,
-            "mangahub.ru": state.mangahub,
-            "mangahub": state.mangahub,
-            "remanga.org": state.remanga,
-            "remanga": state.remanga,
-            "mangalib.me": state.mangalib,
-            "mangalib": state.mangalib,
-        }
-    )
 
 
 class ResultManga(BaseModel):
@@ -43,17 +26,22 @@ async def update_cache(parser: BaseMangaSource, slug: str):
     await parser.save(slug)
 
 
-@router.get("/manga/{source}/chapters/{slug}", response_model=ResultManga)
+@router.get(
+    "/manga/{source}/chapters/{slug}",
+    response_model=ResultManga,
+    response_class=ORJSONResponse,
+)
 async def manga(
     background_tasks: BackgroundTasks,
+    request: Request,
     source: str,
     slug: str,
     limit: int = 20,
-    mapping: MappingProxyType = Depends(mapping),
+    after: datetime = None,
 ):
-    parser = mapping[source]
+    parser = request.app.state.mapping[source]
     t = time.monotonic()
-    mangas = take(limit, parser.load(slug))
+    mangas = parser.load(slug, limit, after)
     log.info("time: %r", time.monotonic() - t)
     background_tasks.add_task(update_cache, parser, slug)
     return ResultManga(mangas=mangas, total=0)
@@ -63,15 +51,21 @@ async def manga(
     "/manga/byUrl/{raw_url:path}",
     response_model=ResultManga,
     responses={204: dict(description="Cannot find matched url")},
+    response_class=ORJSONResponse,
 )
 async def byurl(
-    raw_url: str, limit: int = 20, mapping: MappingProxyType = Depends(mapping)
+    background_tasks: BackgroundTasks,
+    request: Request,
+    raw_url: str,
+    limit: int = 20,
+    after: datetime = None,
 ):
     url = URL(raw_url)
     try:
-        process = mapping[url.host]
+        parser = request.app.state.mapping[url.host]
         slug = url.path.lstrip("/")
-        mangas = take(limit, process.load(slug))
+        mangas = parser.load(slug, limit, after)
+        background_tasks.add_task(update_cache, parser, slug)
         return ResultManga(mangas=mangas, total=0)
     except KeyError:
         return Response(status_code=204)

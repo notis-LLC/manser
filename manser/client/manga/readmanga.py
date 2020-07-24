@@ -39,7 +39,7 @@ class Readmanga(BaseMangaSource):
         try:
             name = found.group(4).strip()
         except AttributeError:
-            name = ""
+            name = title
         return BaseLatestValidator(
             date=date, tome=tome, number=number, name=name, href=href
         )

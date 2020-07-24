@@ -1,6 +1,7 @@
 import asyncio
 import logging
-from asyncio import gather, sleep
+from asyncio import gather
+from types import MappingProxyType
 
 from fastapi import FastAPI
 from lsm import LSM
@@ -21,6 +22,7 @@ from manser.config import (
     PORT,
     PROXY6_TOKEN,
     UPDATE_INTERVAL,
+    WORKERS,
 )
 from manser.handlers import router
 from manser.workers.feedly import readmanga_feedly_updater
@@ -66,6 +68,20 @@ def get_application() -> FastAPI:
         log.info("Create deps mangalib")
         app.state.mangalib = Mangalib(app.state.store, proxy6=app.state.proxy6)
 
+        app.state.mapping = MappingProxyType(
+            {
+                "readmanga.me": app.state.readmanga,
+                "readmanga.live": app.state.readmanga,
+                "readmanga": app.state.readmanga,
+                "mangahub.ru": app.state.mangahub,
+                "mangahub": app.state.mangahub,
+                "remanga.org": app.state.remanga,
+                "remanga": app.state.remanga,
+                "mangalib.me": app.state.mangalib,
+                "mangalib": app.state.mangalib,
+            }
+        )
+
     @app.on_event("shutdown")
     async def down():
         app.state.task_feedly_updater.cancel()
@@ -87,4 +103,4 @@ app = get_application()
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host=HOST, port=PORT, log_level=LOG_LEVEL)
+    uvicorn.run(app, host=HOST, port=PORT, log_level=LOG_LEVEL, workers=WORKERS)

@@ -19,8 +19,9 @@ class BaseLatestValidator(BaseModel):
     date: datetime
     href: HttpUrl
 
-    # class Config:
-    #     json_dumps = orjson.dumps
+    class Config:
+        # json_dumps = orjson.dumps
+        json_loads = orjson.loads
 
 
 class HistoryModel(BaseModel):
@@ -104,11 +105,16 @@ class MangaStore:
         self.db.commit()
 
     def load(
-        self, parser: str, slug: str
+        self, parser: str, slug: str, limit: int = 0, after: datetime = None
     ) -> Generator[BaseLatestValidator, None, None]:
         key = f"manga-{parser}-{slug}-"
-        for key, val in self.db.fetch_range(key, key + str(9999)):
-            yield BaseLatestValidator(**orjson.loads(val))
+        for i, (key, val) in enumerate(self.db.fetch_range(key, key + str(9999))):
+            if limit and i >= limit:
+                return None
+            data = BaseLatestValidator(**orjson.loads(val))
+            if after and data.date < after:
+                return None
+            yield data
 
 
 class Store(UserStore, MangaStore):

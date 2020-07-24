@@ -1,9 +1,10 @@
 import abc
 import logging
+from datetime import datetime
 from typing import AsyncGenerator, Generator, List
 
 import orjson
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientSession
 from aioitertools import list
 from yarl import URL
 
@@ -64,5 +65,7 @@ class BaseMangaSource:
     async def latest(self, slug: str) -> AsyncGenerator[BaseLatestValidator, None]:
         raise NotImplementedError
 
-    def load(self, slug: str) -> Generator[BaseLatestValidator, None, None]:
-        yield from self.store.load(self.key, slug)
+    def load(
+        self, slug: str, limit: int, after: datetime
+    ) -> Generator[BaseLatestValidator, None, None]:
+        yield from self.store.load(self.key, slug, limit, after)
