@@ -1,6 +1,6 @@
 import random
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import orjson
 from aiohttp import ClientSession
@@ -43,10 +43,14 @@ class ProxyList(BaseModel):
 class Proxy6:
     def __init__(self, api_key: str):
         self.api_key = api_key
+        self.proxies: Optional[List[Proxy]] = None
 
     @property
     def _session(self):
         return ClientSession()
+
+    async def init(self):
+        self.proxies = await list(self.active())
 
     async def close(self):
         await self._session.close()
@@ -63,9 +67,9 @@ class Proxy6:
                 continue
             yield proxy
 
-    async def choice(self) -> Proxy:
-        return random.choice(await list(self.active()))
+    def choice(self) -> Proxy:
+        return random.choice(self.proxies)
 
-    async def connector(self):
-        proxy = await self.choice()
+    def connector(self):
+        proxy = self.choice()
         return ProxyConnector.from_url(str(proxy.url()), limit=1, limit_per_host=1)

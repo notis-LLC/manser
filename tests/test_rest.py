@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+from async_asgi_testclient import TestClient
 
 from manser.__main__ import app
 from manser.client.manga.abc import BaseMangaSource
@@ -17,9 +17,14 @@ def save(store: Store):
 
 
 @pytest.fixture
-async def client():
-    async with AsyncClient(app=app, base_url="http://test") as ac:
-        yield ac
+async def asyncasgitestclient():
+    yield TestClient(app)
+
+
+@pytest.fixture
+async def client(asyncasgitestclient):
+    async with asyncasgitestclient:
+        yield asyncasgitestclient
 
 
 @pytest.mark.parametrize(
@@ -29,7 +34,7 @@ async def client():
             "van_pis",
             {
                 "date": "2020-06-20T00:00:00",
-                "href": "https://readmanga.me/van_pis/vol97/983",
+                "href": "https://readmanga.live/van_pis/vol97/983",
                 "name": "Раскат грома",
                 "number": 983.0,
                 "tome": 97,
@@ -39,7 +44,7 @@ async def client():
             "cheshire_crossing",
             {
                 "date": "2020-06-12T00:00:00",
-                "href": "https://readmanga.me/cheshire_crossing/vol1/17",
+                "href": "https://readmanga.live/cheshire_crossing/vol1/17",
                 "name": "Птичка потеряла свои крылья",
                 "number": 17.0,
                 "tome": 1,
@@ -172,7 +177,7 @@ async def test_by_url(save, client, readmanga):
         "mangas": [
             {
                 "date": "2020-06-20T00:00:00",
-                "href": "https://readmanga.me/van_pis/vol97/983",
+                "href": "https://readmanga.live/van_pis/vol97/983",
                 "name": "Раскат грома",
                 "number": 983.0,
                 "tome": 97,

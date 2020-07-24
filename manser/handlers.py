@@ -1,76 +1,34 @@
+import logging
+import time
 from types import MappingProxyType
 from typing import List
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Response
-from lsm import LSM
+from fastapi import APIRouter, BackgroundTasks, Depends, Request, Response
 from more_itertools import take
 from pydantic import BaseModel
 from yarl import URL
 
 from manser.client.manga.abc import BaseLatestValidator, BaseMangaSource
-from manser.client.manga.mangahub import MangaHub
-from manser.client.manga.mangalib import Mangalib
-from manser.client.manga.readmanga import Readmanga
-from manser.client.manga.remanga import Remanga
-from manser.client.proxy6 import Proxy6
-from manser.client.store import Store
-from manser.config import DBNAME, PROXY6_TOKEN, UPDATE_INTERVAL
+
+log = logging.getLogger(__name__)
 
 router = APIRouter()
 
 
-def store():
-    return Store(LSM(DBNAME), UPDATE_INTERVAL)
-
-
-def proxy6():
-    return Proxy6(PROXY6_TOKEN)
-
-
-async def readmanga(store=Depends(store), proxy6=Depends(proxy6)):
-    connector = await proxy6.connector()
-    client = Readmanga(store, connector=connector)
-    yield client
-    await client.close()
-
-
-async def mangahub(store=Depends(store), proxy6=Depends(proxy6)):
-    connector = await proxy6.connector()
-    client = MangaHub(store, connector=connector)
-    yield client
-    await client.close()
-
-
-async def remanga(store=Depends(store), proxy6=Depends(proxy6)):
-    connector = await proxy6.connector()
-    client = Remanga(store, connector=connector)
-    yield client
-    await client.close()
-
-
-async def mangalib(store=Depends(store), proxy6=Depends(proxy6)):
-    connector = await proxy6.connector()
-    client = Mangalib(store, connector=connector)
-    yield client
-    await client.close()
-
-
-def mapping(
-    readmanga=Depends(readmanga),
-    mangahub=Depends(mangahub),
-    remanga=Depends(remanga),
-    mangalib=Depends(mangalib),
-):
+def mapping(request: Request):
+    log.info("Create deps mapping")
+    state = request.app.state
     return MappingProxyType(
         {
-            "readmanga.me": readmanga,
-            "readmanga": readmanga,
-            "mangahub.ru": mangahub,
-            "mangahub": mangahub,
-            "remanga.org": remanga,
-            "remanga": remanga,
-            "mangalib.me": mangalib,
-            "mangalib": mangalib,
+            "readmanga.me": state.readmanga,
+            "readmanga.live": state.readmanga,
+            "readmanga": state.readmanga,
+            "mangahub.ru": state.mangahub,
+            "mangahub": state.mangahub,
+            "remanga.org": state.remanga,
+            "remanga": state.remanga,
+            "mangalib.me": state.mangalib,
+            "mangalib": state.mangalib,
         }
     )
 
@@ -81,6 +39,7 @@ class ResultManga(BaseModel):
 
 
 async def update_cache(parser: BaseMangaSource, slug: str):
+    log.info("Update cache for %r, manga: %r", parser.key, slug)
     await parser.save(slug)
 
 
@@ -93,7 +52,9 @@ async def manga(
     mapping: MappingProxyType = Depends(mapping),
 ):
     parser = mapping[source]
+    t = time.monotonic()
     mangas = take(limit, parser.load(slug))
+    log.info("time: %r", time.monotonic() - t)
     background_tasks.add_task(update_cache, parser, slug)
     return ResultManga(mangas=mangas, total=0)
 

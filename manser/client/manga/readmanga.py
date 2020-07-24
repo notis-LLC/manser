@@ -8,7 +8,7 @@ from lxml.html import fromstring
 from yarl import URL
 
 from manser.client.feedly import FeedlyClient
-from manser.client.manga.abc import BaseLatestValidator, BaseMangaSource
+from manser.client.manga.abc import BaseLatestValidator, BaseMangaSource, ParsingError
 from manser.client.store import HistoryModel, Store
 
 log = logging.getLogger(__name__)
@@ -17,14 +17,17 @@ log = logging.getLogger(__name__)
 class Readmanga(BaseMangaSource):
     def __init__(self, store: Store, **kwargs):
         self.regex = r"(.*?)(\d+)\s\-?\s?(\d+)?(.*)"
-        self.store = store
         self.parser = "readmanga"
         super().__init__(
-            url=URL("https://readmanga.me"), store=store, key=self.parser, **kwargs
+            url=URL("https://readmanga.live"), store=store, key=self.parser, **kwargs
         )
 
     def parse(self, date: datetime, title: str, href: str) -> BaseLatestValidator:
         found = re.match(self.regex, title)
+        if not found:
+            log.warning("Failed to find in title, for %r", self.key)
+            raise ParsingError
+
         _ = found.group(1)
         tome = int(found.group(2))
         try:
@@ -70,7 +73,7 @@ class Readmanga(BaseMangaSource):
                 log.warning("fail")
                 continue
 
-            self.store.csave_readmanga(model)
+            # self.store.save_readmanga(model)
 
         print("Commit: ", mangas.items[0].originId)
         return mangas.continuation

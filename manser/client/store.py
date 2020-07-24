@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 from enum import Enum, unique
 from typing import Generator, List
@@ -7,6 +8,8 @@ from lsm import LSM
 from pydantic import BaseModel, HttpUrl
 
 from manser.client.feedly import FeedlyItemsResponseModel
+
+log = logging.getLogger(__name__)
 
 
 class BaseLatestValidator(BaseModel):
@@ -84,6 +87,12 @@ class MangaStore:
             return True
 
         dt = datetime.fromisoformat(key)
+        log.info(
+            "Need update: dt: %r, now: %r, update interval: %r",
+            dt,
+            datetime.utcnow(),
+            self.update_interval,
+        )
         return (datetime.utcnow() - dt) > self.update_interval
 
     def save(self, parser: str, slug: str, model: List[BaseLatestValidator]) -> None:

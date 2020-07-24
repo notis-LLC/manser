@@ -1,5 +1,7 @@
+import logging
 import os
 from os import environ
+from time import sleep
 
 import orjson
 import pytest
@@ -20,6 +22,8 @@ from manser.client.store import Store
 environ["PROXY6_TOKEN"] = "test-key"
 from manser.config import DBNAME, PROXY6_TOKEN, UPDATE_INTERVAL
 
+log = logging.getLogger(__name__)
+
 
 @pytest.fixture
 def store():
@@ -32,34 +36,35 @@ def store():
 @pytest.fixture
 async def proxy6():
     client = Proxy6(PROXY6_TOKEN)
+    await client.init()
     yield client
     await client.close()
 
 
 @pytest.fixture
 async def readmanga(store: Store, proxy6: Proxy6):
-    client = Readmanga(store=store, connector=await proxy6.connector())
+    client = Readmanga(store=store, proxy6=proxy6)
     yield client
     await client.close()
 
 
 @pytest.fixture
 async def mangalib(store: Store, proxy6: Proxy6):
-    client = Mangalib(store=store, connector=await proxy6.connector())
+    client = Mangalib(store=store, proxy6=proxy6)
     yield client
     await client.close()
 
 
 @pytest.fixture
 async def mangahub(store: Store, proxy6: Proxy6):
-    client = MangaHub(store=store, connector=await proxy6.connector())
+    client = MangaHub(store=store, proxy6=proxy6)
     yield client
     await client.close()
 
 
 @pytest.fixture
 async def remanga(store: Store, proxy6: Proxy6):
-    client = Remanga(store=store, connector=await proxy6.connector())
+    client = Remanga(store=store, proxy6=proxy6)
     yield client
     await client.close()
 
@@ -81,6 +86,7 @@ def json(name):
 
 def html(name):
     def response(request: Request):
+        log.info("Return html for %r", name)
         with open(f"tests/html/{name}-{request.path.strip('/')}.html", "rb") as fp:
             return Response(status=200, body=fp.read())
 
@@ -97,7 +103,7 @@ async def socks5_server():
 
 @pytest.fixture(autouse=True)
 async def sources(aresponses, socks5_server):
-    aresponses.add("readmanga.me", method_pattern="GET", response=html("readmanga"))
+    aresponses.add("readmanga.live", method_pattern="GET", response=html("readmanga"))
     aresponses.add("mangahub.ru", method_pattern="GET", response=html("mangahub"))
     aresponses.add(
         "remanga.org", method_pattern="GET", response=json("remanga"), repeat=2
