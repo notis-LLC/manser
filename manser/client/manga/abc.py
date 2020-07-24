@@ -56,7 +56,7 @@ class BaseMangaSource:
         except Exception:
             log.exception("Fail to make request")
             return None
-        log.info("Save to store %r, %r: data: %r", self.key, slug, latest)
+        log.info("Save to store %r, %r: data: %r", self.key, slug, len(latest))
         self.store.save(self.key, slug, latest)
         return None
 
