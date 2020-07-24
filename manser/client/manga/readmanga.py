@@ -59,21 +59,28 @@ class Readmanga(BaseMangaSource):
 
     async def feedly_worker(
         self, feedly: FeedlyClient, count: int, continuation: Optional[str] = None
-    ):
+    ) -> str:
+        def key():
+            try:
+                return self.store.db[f"{self.key}-feedly-readmanga-cont"].decode()
+            except KeyError:
+                return None
+
+        continuation = continuation or key()
+
         mangas = await feedly.mangas(count, continuation)
         for manga in mangas.items:
             model = HistoryModel.from_feedly(manga)
 
             try:
-                manga, tome, number, name = self.parse(
-                    model.updated_at, model.title, model.url
-                )
+                parsed = self.parse(model.updated_at, model.title, model.url)
+                log.info("Update from feedly: %r", parsed)
+                self.store.save(self.key, model.slug, [parsed])
+            except ParsingError:
+                continue
             except Exception:
-                print("FAIL: --", manga.title, "--", model.url, manga.json())
-                log.warning("fail")
+                log.exception("Failed to update")
                 continue
 
-            # self.store.save_readmanga(model)
-
-        print("Commit: ", mangas.items[0].originId)
+        self.store.db[f"{self.key}-feedly-readmanga-cont"] = mangas.continuation
         return mangas.continuation

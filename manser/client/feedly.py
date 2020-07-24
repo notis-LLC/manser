@@ -45,18 +45,20 @@ class FeedlyResponseModel(BaseModel):
 
 class FeedlyClient:
     def __init__(self):
-        pass
+        self.base = URL("https://cloud.feedly.com/v3/streams/contents")
+        self.conn = ClientSession()
+
+    async def close(self):
+        await self.conn.close()
 
     async def mangas(
         self, count: int, continuation: Optional[str]
     ) -> FeedlyResponseModel:
-        url = URL("https://cloud.feedly.com/v3/streams/contents")
-        url = url.with_query(
+        url = self.base.with_query(
             streamId="feed/http://feeds.feedburner.com/readmangarss", count=count
         )
         if continuation:
             url = url.update_query(continuation=continuation)
 
-        async with ClientSession() as conn:
-            result = await conn.get(url)
-            return FeedlyResponseModel(**await result.json())
+        result = await self.conn.get(url)
+        return FeedlyResponseModel(**await result.json())

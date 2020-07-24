@@ -29,6 +29,7 @@ class HistoryModel(BaseModel):
     published: datetime
     crawled: datetime
     updated_at: datetime = datetime.now()
+    slug: str
 
     @classmethod
     def from_feedly(cls, item: FeedlyItemsResponseModel):
@@ -37,6 +38,7 @@ class HistoryModel(BaseModel):
             title=item.title,
             published=item.published,
             crawled=item.crawled,
+            slug=item.originId.path.split("/")[0],
         )
 
 
