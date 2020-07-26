@@ -99,8 +99,3 @@ def get_application() -> FastAPI:
 
 
 app = get_application()
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host=HOST, port=PORT, log_level=LOG_LEVEL, workers=WORKERS)
