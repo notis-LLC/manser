@@ -14,16 +14,7 @@ from manser.client.manga.readmanga import Readmanga
 from manser.client.manga.remanga import Remanga
 from manser.client.proxy6 import Proxy6
 from manser.client.store import Store
-from manser.config import (
-    DBNAME,
-    DEBUG,
-    HOST,
-    LOG_LEVEL,
-    PORT,
-    PROXY6_TOKEN,
-    UPDATE_INTERVAL,
-    WORKERS,
-)
+from manser.config import DBNAME, DEBUG, LOG_LEVEL, PROXY6_TOKEN, UPDATE_INTERVAL
 from manser.handlers import router
 from manser.workers.feedly import readmanga_feedly_updater
 

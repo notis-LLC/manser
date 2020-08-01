@@ -1,7 +1,7 @@
 import abc
 import logging
 from datetime import datetime
-from typing import AsyncGenerator, Generator, List
+from typing import Any, AsyncGenerator, Dict, Generator, List
 
 import orjson
 from aiohttp import ClientSession
@@ -30,11 +30,14 @@ class BaseMangaSource:
 
     async def request(self, slug):
         res = await self.session.get(self.url / slug)
-        log.info("req: %r:%r, status: %r", self.key, slug, res.status)
+        log.info("req: %r: %r, status: %r", self.key, self.url / slug, res.status)
         return await res.read()
 
-    async def json(self, slug: str):
-        res = await self.session.get(self.url / slug)
+    async def json(self, slug: str, query: Dict[str, Any] = None):
+        url = self.url / slug
+        if query:
+            url = url.with_query(query)
+        res = await self.session.get(url)
         return await res.json(loads=orjson.loads)
 
     def normalize_date(self, text):
@@ -57,13 +60,20 @@ class BaseMangaSource:
         except Exception:
             log.exception("Fail to make request")
             return None
-        log.info("Save to store %r, %r: data: %r", self.key, slug, len(latest))
-        self.store.save(self.key, slug, latest)
+
+        if latest:
+            log.info("Save to store %r, %r: data: %r", self.key, slug, len(latest))
+            self.store.save(self.key, slug, latest)
+        else:
+            log.info("Empty data. Skip saving to store: %r, %r", self.key, slug)
         return None
 
     @abc.abstractmethod
     async def latest(self, slug: str) -> AsyncGenerator[BaseLatestValidator, None]:
         raise NotImplementedError
+
+    def normalize_slug(self, slug: str):
+        return slug.lstrip("/")
 
     def load(
         self, slug: str, limit: int, after: datetime

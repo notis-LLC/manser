@@ -1,14 +1,17 @@
+import logging
 import re
 from datetime import datetime
 from typing import AsyncGenerator
 
 import orjson
 from lxml.cssselect import CSSSelector
-from lxml.html import fromstring
+from lxml.html import HtmlElement, fromstring
 from yarl import URL
 
 from manser.client.manga.abc import BaseLatestValidator, BaseMangaSource
 from manser.client.store import Store
+
+log = logging.getLogger(__name__)
 
 
 class Mangalib(BaseMangaSource):
@@ -19,7 +22,8 @@ class Mangalib(BaseMangaSource):
             url=URL("https://mangalib.me"), store=store, key="mangalib", **kwargs
         )
 
-    def parse(self, slug: str, e) -> BaseLatestValidator:
+    def parse(self, slug: str, e: HtmlElement) -> BaseLatestValidator:
+        log.info("parse: %r: %r", slug, str(e))
         try:
             link = e.cssselect("a")[0]
             path = link.attrib["href"]

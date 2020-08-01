@@ -1,7 +1,6 @@
 import logging
 import os
 from os import environ
-from time import sleep
 
 import orjson
 import pytest

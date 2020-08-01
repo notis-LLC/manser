@@ -15,3 +15,6 @@ upload: build
 develop:
 	pip install poetry==1.0.*
 	poetry install
+
+run:
+	uvicorn --host=0.0.0.0 manser.__main__:app --reload

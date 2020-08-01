@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import AsyncGenerator, Dict, List
 
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from yarl import URL
 
 from manser.client.manga.abc import BaseLatestValidator, BaseMangaSource
@@ -56,17 +56,20 @@ class Remanga(BaseMangaSource):
     def __init__(self, store: Store, **kwargs):
         self.chapter_url = URL("https://remanga.org/manga")
         super().__init__(
-            url=URL("https://remanga.org/api/titles"),
+            url=URL("https://api.remanga.org/api/titles"),
             store=store,
             key="remanga",
             **kwargs,
         )
 
+    def normalize_slug(self, slug: str):
+        return slug.lstrip("/manga/")
+
     async def latest(self, slug: str) -> AsyncGenerator[BaseLatestValidator, None]:
         title = RemangaTitleValidator(**await self.json(slug))
         for branch in title.content.branches:
             chapters = RemangaChaptersValidator(
-                **await self.json(f"chapters/?branches={branch.id}")
+                **await self.json("chapters/", dict(branch_id=branch.id))
             )
             for chapter in chapters.content:
                 yield chapter.to_base(self.chapter_url / slug)

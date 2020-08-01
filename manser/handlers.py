@@ -5,7 +5,6 @@ from typing import List
 
 from fastapi import APIRouter, BackgroundTasks, Request, Response
 from fastapi.responses import ORJSONResponse
-from more_itertools import take
 from pydantic import BaseModel
 from yarl import URL
 
@@ -63,7 +62,7 @@ async def byurl(
     url = URL(raw_url)
     try:
         parser = request.app.state.mapping[url.host]
-        slug = url.path.lstrip("/")
+        slug = parser.normalize_slug(url.path)
         mangas = parser.load(slug, limit, after)
         background_tasks.add_task(update_cache, parser, slug)
         return ResultManga(mangas=mangas, total=0)
