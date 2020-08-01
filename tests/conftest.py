@@ -77,6 +77,8 @@ async def aresponses():
 def json(name):
     def response(request: Request):
         path = request.path.replace("?", "").strip("/")
+        if request.query:
+            path = path + "/" + ",".join([f"{k}={v}" for k, v in request.query.items()])
         with open(f"tests/json/{name}-{path}.json", "rb") as fp:
             return json_response(data=orjson.loads(fp.read()), status=200)
 
@@ -105,7 +107,7 @@ async def sources(aresponses, socks5_server):
     aresponses.add("readmanga.live", method_pattern="GET", response=html("readmanga"))
     aresponses.add("mangahub.ru", method_pattern="GET", response=html("mangahub"))
     aresponses.add(
-        "remanga.org", method_pattern="GET", response=json("remanga"), repeat=2
+        "api.remanga.org", method_pattern="GET", response=json("remanga"), repeat=10
     )
     aresponses.add("mangalib.me", method_pattern="GET", response=html("mangalib"))
     aresponses.add(

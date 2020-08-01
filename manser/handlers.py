@@ -39,9 +39,7 @@ async def manga(
     after: datetime = None,
 ):
     parser = request.app.state.mapping[source]
-    t = time.monotonic()
     mangas = parser.load(slug, limit, after)
-    log.info("time: %r", time.monotonic() - t)
     background_tasks.add_task(update_cache, parser, slug)
     return ResultManga(mangas=mangas, total=0)
 
