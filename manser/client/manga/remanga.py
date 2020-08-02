@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import AsyncGenerator, Dict, List
+from typing import AsyncGenerator, Dict, List, Callable
 
+import pytz
 from pydantic import BaseModel
 from yarl import URL
 
@@ -15,11 +16,11 @@ class RemangaChapterValidator(BaseModel):
     name: str
     upload_date: datetime
 
-    def to_base(self, url: URL) -> BaseLatestValidator:
+    def to_base(self, url: URL, parse_time: Callable) -> BaseLatestValidator:
         return BaseLatestValidator(
             tome=self.tome,
             number=float(self.chapter),
-            date=self.upload_date.timestamp(),
+            date=parse_time(self.upload_date),
             name=self.name,
             href=str(url / f"ch{self.id}"),
         )
@@ -72,4 +73,4 @@ class Remanga(BaseMangaSource):
                 **await self.json("chapters/", dict(branch_id=branch.id))
             )
             for chapter in chapters.content:
-                yield chapter.to_base(self.chapter_url / slug)
+                yield chapter.to_base(self.chapter_url / slug, self.unixtime)

@@ -56,7 +56,7 @@ class Mangalib(BaseMangaSource):
         raw_date = self.normalize_date(e.cssselect(".chapter-item__date")[0].text)
         date = datetime.strptime(raw_date, "%d.%m.%Y")
         return BaseLatestValidator(
-            name=name, tome=tome, number=number, date=date.timestamp(), href=path
+            name=name, tome=tome, number=number, date=self.unixtime(date), href=path
         )
 
     async def latest(self, slug: str) -> AsyncGenerator[BaseLatestValidator, None]:

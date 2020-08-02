@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Any, AsyncGenerator, Dict, Generator, List, Optional
 
 import orjson
+import pytz
 from aiohttp import ClientSession
 from aioitertools import list
 from yarl import URL
@@ -24,6 +25,7 @@ class BaseMangaSource:
         self.session = ClientSession(connector=proxy6.connector())
         self.store = store
         self.key = key
+        self.utcdelta = datetime.now().utcoffset()
 
     async def close(self):
         await self.session.close()
@@ -74,6 +76,11 @@ class BaseMangaSource:
 
     def normalize_slug(self, slug: str):
         return slug.lstrip("/")
+
+    def unixtime(self, date: datetime):
+        if not date.tzinfo:
+            date = date.replace(tzinfo=pytz.utc)
+        return date.timestamp()
 
     def load(
         self, slug: str, limit: int, after: Optional[float]

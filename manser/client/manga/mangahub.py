@@ -43,6 +43,6 @@ class MangaHub(BaseMangaSource):
                 tome=tome,
                 number=number,
                 name=name,
-                date=date.timestamp(),
+                date=self.unixtime(date),
                 href=str(self.url / href),
             )

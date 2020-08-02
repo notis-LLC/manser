@@ -5,7 +5,6 @@ from enum import Enum, unique
 from typing import Generator, List, Optional
 
 import orjson
-import pytz
 from lsm import LSM
 from pydantic import BaseModel, HttpUrl
 
@@ -76,7 +75,7 @@ class UserStore:
 
     def user(self, uid: int) -> List:
         result = []
-        for key, value in self.db[self._key(str(uid), "-") :]:
+        for key, value in self.db[self._key(str(uid), "-"):]:
             result.append(dict(key=key.decode(), value=value.decode()))
         return result
 
@@ -107,7 +106,7 @@ class MangaStore:
         self.db.commit()
 
     def load(
-        self, parser: str, slug: str, limit: int = 0, after: Optional[float] = None
+            self, parser: str, slug: str, limit: int = 0, after: Optional[float] = None
     ) -> Generator[BaseLatestValidator, None, None]:
         key = f"manga-{parser}-{slug}-"
         for i, (key, val) in enumerate(self.db.fetch_range(key, key + str(9999))):
