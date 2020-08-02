@@ -1,9 +1,11 @@
 import logging
+from contextlib import suppress
 from datetime import datetime, timedelta
 from enum import Enum, unique
-from typing import Generator, List
+from typing import Generator, List, Optional
 
 import orjson
+import pytz
 from lsm import LSM
 from pydantic import BaseModel, HttpUrl
 
@@ -16,7 +18,7 @@ class BaseLatestValidator(BaseModel):
     tome: int
     number: float
     name: str
-    date: datetime
+    date: float
     href: HttpUrl
 
     class Config:
@@ -105,15 +107,16 @@ class MangaStore:
         self.db.commit()
 
     def load(
-        self, parser: str, slug: str, limit: int = 0, after: datetime = None
+        self, parser: str, slug: str, limit: int = 0, after: Optional[float] = None
     ) -> Generator[BaseLatestValidator, None, None]:
         key = f"manga-{parser}-{slug}-"
         for i, (key, val) in enumerate(self.db.fetch_range(key, key + str(9999))):
             if limit and i >= limit:
                 return None
             data = BaseLatestValidator(**orjson.loads(val))
-            if after and data.date < after:
-                return None
+            with suppress(ValueError):
+                if after is not None and data.date <= after:
+                    return None
             yield data
 
 

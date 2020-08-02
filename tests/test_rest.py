@@ -33,7 +33,7 @@ async def client(asyncasgitestclient):
         (
             "van_pis",
             {
-                "date": "2020-06-20T00:00:00",
+                "date": 1592600400.0,
                 "href": "https://readmanga.live/van_pis/vol97/983",
                 "name": "Раскат грома",
                 "number": 983.0,
@@ -43,7 +43,7 @@ async def client(asyncasgitestclient):
         (
             "cheshire_crossing",
             {
-                "date": "2020-06-12T00:00:00",
+                "date": 1591909200.0,
                 "href": "https://readmanga.live/cheshire_crossing/vol1/17",
                 "name": "Птичка потеряла свои крылья",
                 "number": 17.0,
@@ -70,7 +70,7 @@ async def test_readmanga(client, save, readmanga, slug, exp):
         (
             "naruto",
             {
-                "date": "2016-11-19T00:00:00",
+                "date": 1479502800.0,
                 "href": "https://mangahub.ru/naruto/read/valik_prodzhekt/vol72/700/1/",
                 "name": "Узумаки Наруто",
                 "number": 700.0,
@@ -80,7 +80,7 @@ async def test_readmanga(client, save, readmanga, slug, exp):
         (
             "cheshire_crossing",
             {
-                "date": "2019-10-13T00:00:00",
+                "date": 1570914000.0,
                 "href": "https://mangahub.ru/cheshire_crossing/read/wimer/vol1/10/1/",
                 "name": "Лучше дома места нет",
                 "number": 10.0,
@@ -105,7 +105,7 @@ async def test_mangahub(save, client, slug, exp, mangahub):
         (
             "blade_of_demon_destruction",
             {
-                "date": "2020-06-16T06:13:27.507449",
+                "date": 1592277207.507449,
                 "href": "https://remanga.org/manga/blade_of_demon_destruction/ch348061",
                 "name": "КОНЕЦ",
                 "number": 205.0,
@@ -115,7 +115,7 @@ async def test_mangahub(save, client, slug, exp, mangahub):
         (
             "cheshire_crossing",
             {
-                "date": "2020-06-13T06:10:02.607879",
+                "date": 1592017802.607879,
                 "href": "https://remanga.org/manga/cheshire_crossing/ch345901",
                 "name": "Птичка потеряла свои крылья",
                 "number": 17.0,
@@ -140,7 +140,7 @@ async def test_remanga(save, slug, exp, client, remanga):
         (
             "yakusoku-no-neverland",
             {
-                "date": "2020-06-15T00:00:00",
+                "date": 1592168400.0,
                 "href": "https://mangalib.me/yakusoku-no-neverland/v17/c181/risens-team",
                 "name": "Превозмогая судьбу",
                 "number": 181.0,
@@ -150,7 +150,7 @@ async def test_remanga(save, slug, exp, client, remanga):
         (
             "cheshire_crossing",
             {
-                "date": "2020-06-11T00:00:00",
+                "date": 1591822800.0,
                 "href": "https://mangalib.me/cheshire-crossing/v1/c17/wimer",
                 "name": "Птичка потеряла свои крылья",
                 "number": 17.0,
@@ -176,7 +176,7 @@ async def test_by_url(save, client, readmanga):
     assert response.json() == {
         "mangas": [
             {
-                "date": "2020-06-20T00:00:00",
+                "date": 1592600400.0,
                 "href": "https://readmanga.live/van_pis/vol97/983",
                 "name": "Раскат грома",
                 "number": 983.0,

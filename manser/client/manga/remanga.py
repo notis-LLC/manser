@@ -19,7 +19,7 @@ class RemangaChapterValidator(BaseModel):
         return BaseLatestValidator(
             tome=self.tome,
             number=float(self.chapter),
-            date=self.upload_date,
+            date=self.upload_date.timestamp(),
             name=self.name,
             href=str(url / f"ch{self.id}"),
         )

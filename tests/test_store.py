@@ -10,9 +10,9 @@ from manser.client.store import Store
 @pytest.fixture
 def data():
     data_list = [
-        (1, 3, "Третья", datetime(2000, 1, 3), "http://test.http/3"),
-        (1, 2, "Вторая", datetime(2000, 1, 2), "http://test.http/2"),
-        (1, 1, "Первая", datetime(2000, 1, 1), "http://test.http/1"),
+        (1, 3, "Третья", datetime(2000, 1, 3).timestamp(), "http://test.http/3"),
+        (1, 2, "Вторая", datetime(2000, 1, 2).timestamp(), "http://test.http/2"),
+        (1, 1, "Первая", datetime(2000, 1, 1).timestamp(), "http://test.http/1"),
     ]
     return [
         BaseLatestValidator(tome=tome, number=number, name=name, date=date, href=href)

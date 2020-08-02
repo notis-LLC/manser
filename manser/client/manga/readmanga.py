@@ -41,7 +41,7 @@ class Readmanga(BaseMangaSource):
         except AttributeError:
             name = title
         return BaseLatestValidator(
-            date=date, tome=tome, number=number, name=name, href=href
+            date=date.timestamp(), tome=tome, number=number, name=name, href=href
         )
 
     async def latest(self, slug: str) -> AsyncGenerator[BaseLatestValidator, None]:

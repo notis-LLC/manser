@@ -55,7 +55,7 @@ async def byurl(
     request: Request,
     raw_url: str,
     limit: int = 20,
-    after: datetime = None,
+    after: float = None,
 ):
     url = URL(raw_url)
     try:

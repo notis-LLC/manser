@@ -1,7 +1,7 @@
 import abc
 import logging
 from datetime import datetime
-from typing import Any, AsyncGenerator, Dict, Generator, List
+from typing import Any, AsyncGenerator, Dict, Generator, List, Optional
 
 import orjson
 from aiohttp import ClientSession
@@ -76,6 +76,6 @@ class BaseMangaSource:
         return slug.lstrip("/")
 
     def load(
-        self, slug: str, limit: int, after: datetime
+        self, slug: str, limit: int, after: Optional[float]
     ) -> Generator[BaseLatestValidator, None, None]:
         yield from self.store.load(self.key, slug, limit, after)
