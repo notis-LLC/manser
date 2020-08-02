@@ -1,0 +1,26 @@
+{
+  "status": "yes",
+  "user_id": "10059",
+  "balance": "100.00",
+  "currency": "RUB",
+  "list_count": 1,
+  "list": {
+    "8006212": {
+      "id": "8006212",
+      "version": "3",
+      "ip": "127.0.0.1",
+      "host": "127.0.0.1",
+      "port": "9440",
+      "user": "ololo",
+      "pass": "pass",
+      "type": "socks",
+      "country": "ru",
+      "date": "2030-01-02 02:01:00",
+      "date_end": "2030-01-03 02:01:00",
+      "unixtime": 1595000000,
+      "unixtime_end": 1597000000,
+      "descr": "",
+      "active": "1"
+    }
+  }
+}
